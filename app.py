@@ -1,9 +1,15 @@
+import logging
 from flask import Flask, request, jsonify
 import joblib
 import numpy as np
 import os
 
+logging.basicConfig(level=logging.INFO)
+
 app = Flask(__name__)
+
+# Log para verificar rutas registradas
+logging.info(f"Rutas registradas: {app.url_map}")
 
 # Cargar el modelo previamente entrenado
 modelo = joblib.load('modelo_regresion_lineal.joblib')
@@ -15,7 +21,7 @@ def home():
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
-        data = request.json  # Recibir los datos en formato JSON
+        data = request.json
         valores = np.array([data['WorkoutTime'], data['ReadingTime'], data['PhoneTime'],
                             data['WorkHours'], data['CaffeineIntake'], data['RelaxationTime']]).reshape(1, -1)
         prediccion = modelo.predict(valores)[0]
@@ -39,6 +45,5 @@ def predict():
         return jsonify({"error": str(e)})
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))  # Render asigna un puerto dinámico
+    port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
-
