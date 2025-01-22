@@ -22,7 +22,7 @@ def home():
 def predict():
     try:
         data = request.json
-        valores = np.array([data['WorkoutTime'], data['ReadingTime'], data['PhoneTime'],data['SleepTime'],
+        valores = np.array([data['WorkoutTime'], data['ReadingTime'], data['PhoneTime'],
                             data['WorkHours'], data['CaffeineIntake'], data['RelaxationTime']]).reshape(1, -1)
         prediccion = modelo.predict(valores)[0]
 
